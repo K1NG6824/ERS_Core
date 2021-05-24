@@ -96,8 +96,8 @@ public int GiveDrop(int iClient, int iSkinId, int iWeaponId)
     {
 		if(!WSGK_ClientHaveItem(iClient, iSkinId, iWeaponId, true))
         {
-        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iWeaponId, 8000)) 
-				WSGK_GiveClientItem(iClient, iWeaponId, 8000);
+        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iSkinId, 8000)) 
+				WSGK_GiveClientItem(iClient, iSkinId, 8000);
 
             WSGK_GiveClientItem(iClient, iSkinId, iWeaponId, true);
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
