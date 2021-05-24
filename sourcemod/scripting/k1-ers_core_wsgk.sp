@@ -11,7 +11,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core (for WSGK)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "1.5"
+    version = "1.6"
 }
 
 public void OnPluginStart()
