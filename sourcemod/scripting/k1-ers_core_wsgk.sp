@@ -63,11 +63,11 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool bLate, char[] sError, int iLen
 public int Give_WS_GiveClientSkin(Handle hPlugin, int iArgs)
 {
     int iClient = GetNativeCell(1);
-    int iSkinId = GetNativeCell(2);
+    int iItemId = GetNativeCell(2);
     int iWeaponId = GetNativeCell(3);
     if(iWeaponId == -1)
     {
-        int iIndex = g_hArrayWS.FindValue(iSkinId, 0);
+        int iIndex = g_hArrayWS.FindValue(iItemId, 0);
         if(iIndex == -1)
             return 0;
 
@@ -76,7 +76,7 @@ public int Give_WS_GiveClientSkin(Handle hPlugin, int iArgs)
     if(!IsClientInGame(iClient) || IsFakeClient(iClient))
         return 0;
 
-    return GiveDrop(iClient, iSkinId, iWeaponId);
+    return GiveDrop(iClient, iItemId, iWeaponId);
 }
 
 bool IsValidClient(int client)
@@ -88,18 +88,18 @@ bool IsValidClient(int client)
     return true;
 }
 
-public int GiveDrop(int iClient, int iSkinId, int iWeaponId)
+public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 {
     if(!IsValidClient(iClient))
 		return 0;
     else
     {
-		if(!WSGK_ClientHaveItem(iClient, iSkinId, iWeaponId, true))
+		if(!WSGK_ClientHaveItem(iClient, iItemId, iWeaponId, true))
         {
-        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iSkinId, 8000)) 
-				WSGK_GiveClientItem(iClient, iSkinId, 8000);
+        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iWeaponId, 8000)) 
+				WSGK_GiveClientItem(iClient, iWeaponId, 8000);
 
-            WSGK_GiveClientItem(iClient, iSkinId, iWeaponId, true);
+            WSGK_GiveClientItem(iClient, iItemId, iWeaponId, true);
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
             Protobuf entity_updates = pb.AddMessage("entity_updates");
             int itemId[2];
@@ -110,7 +110,7 @@ public int GiveDrop(int iClient, int iSkinId, int iWeaponId)
             entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
             entity_updates.SetInt64("itemid", itemId);
             entity_updates.SetInt("defindex", iWeaponId);
-            entity_updates.SetInt("paintindex", iSkinId); 
+            entity_updates.SetInt("paintindex", iItemId); 
             entity_updates.SetInt("rarity", 1); 
             EndMessage();
             return 1;
