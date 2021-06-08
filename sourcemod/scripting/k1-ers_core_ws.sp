@@ -2,16 +2,17 @@
 #include <sdkhooks>
 #include <clientprefs>
 #include <k1_ers_core> 
-#include <k1_wsgk> 
+//для компиляции под k1-ws от меня убрать коментирование у строк кода ниже, пояснения не нужно (русский текст)
+#include <k1-ws> 
 bool g_bGiveKnife;
  
 ArrayList g_hArrayWS;
 public Plugin myinfo = 
 {
-    name = "[K1-ERS] End Round Skin Core (for WSGK)",
+    name = "[K1-ERS] End Round Skin Core (for WS)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "1.8"
+    version = "1.4.1"
 }
 
 public void OnPluginStart()
@@ -63,11 +64,11 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool bLate, char[] sError, int iLen
 public int Give_WS_GiveClientSkin(Handle hPlugin, int iArgs)
 {
     int iClient = GetNativeCell(1);
-    int iItemId = GetNativeCell(2);
+    int iSkinId = GetNativeCell(2);
     int iWeaponId = GetNativeCell(3);
     if(iWeaponId == -1)
     {
-        int iIndex = g_hArrayWS.FindValue(iItemId, 0);
+        int iIndex = g_hArrayWS.FindValue(iSkinId, 0);
         if(iIndex == -1)
             return 0;
 
@@ -76,7 +77,7 @@ public int Give_WS_GiveClientSkin(Handle hPlugin, int iArgs)
     if(!IsClientInGame(iClient) || IsFakeClient(iClient))
         return 0;
 
-    return GiveDrop(iClient, iItemId, iWeaponId);
+    return GiveDrop(iClient, iSkinId, iWeaponId);
 }
 
 bool IsValidClient(int client)
@@ -88,18 +89,18 @@ bool IsValidClient(int client)
     return true;
 }
 
-public int GiveDrop(int iClient, int iItemId, int iWeaponId)
+public int GiveDrop(int iClient, int iSkinId, int iWeaponId)
 {
     if(!IsValidClient(iClient))
 		return 0;
     else
     {
-		if(!WSGK_ClientHaveItem(iClient, iItemId, iWeaponId, true))
+		if(!Weapons_ClientHaveSkin(iClient, iSkinId, iWeaponId, true))
         {
-        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iWeaponId, 8000, true)) 
-				WSGK_GiveClientItem(iClient, iWeaponId, 8000, true);
+        	if(g_bGiveKnife && !Weapons_ClientHaveKnife(iClient, iWeaponId, true)) 
+				Weapons_GiveClientKnife(iClient, iWeaponId, true);
 
-            WSGK_GiveClientItem(iClient, iItemId, iWeaponId, true);
+            Weapons_GiveClientSkin(iClient, iSkinId, iWeaponId, true);
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
             Protobuf entity_updates = pb.AddMessage("entity_updates");
             int itemId[2];
@@ -110,7 +111,7 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
             entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
             entity_updates.SetInt64("itemid", itemId);
             entity_updates.SetInt("defindex", iWeaponId);
-            entity_updates.SetInt("paintindex", iItemId); 
+            entity_updates.SetInt("paintindex", iSkinId); 
             entity_updates.SetInt("rarity", 1); 
             EndMessage();
             return 1;
