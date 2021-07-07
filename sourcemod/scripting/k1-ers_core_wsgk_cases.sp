@@ -5,14 +5,13 @@
 #include <k1_wsgk> 
 #include <k1_cases> 
 bool g_bGiveKnife;
-int g_iCaseId[] = {4001,4004,4010,4091,4003,4018,4061,4089,4233,4471,4598,4620,4669,4695,4698,4717,4747,4548,4236,4281,4288,4482,4017,4352,4011,4186,4138,4351,4403,4029,4187,4009};
 ArrayList g_hArrayWS;
 public Plugin myinfo = 
 {
     name = "[K1-ERS] End Round Skin Core (for WSGK)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "1.8"
+    version = "1.9"
 }
 
 public void OnPluginStart()
@@ -95,35 +94,26 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 		return 0;
     else
     {
-        bool bCase;
-        for(int i; i < sizeof g_iCaseId; i++)
+        if(iWeaponId == 10000)
         {
-            if(iWeaponId == g_iCaseId[i])
-            {
-                bCase = true;
-                break;
-            }
-        }
-        if(bCase)
-        {
-            int indexmodel = K1_CasesIdCaseModelById(iWeaponId);
-            if(indexmodel != -1)
-            {
-                K1_CasesGiveCase(iClient, iWeaponId, 1);
-                Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
-                Protobuf entity_updates = pb.AddMessage("entity_updates");
-                int itemId[2];
+            int indexmodel = K1_CasesIdCaseModelById(iItemId);
+            if(indexmodel == -1)
+                indexmodel = 4001;
+                
+            K1_CasesGiveCase(iClient, iItemId, 1);
+            Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
+            Protobuf entity_updates = pb.AddMessage("entity_updates");
+            int itemId[2];
 
-                itemId[0] = GetRandomInt(0, 1000000);
-                itemId[1] = itemId[0];
+            itemId[0] = GetRandomInt(0, 1000000);
+            itemId[1] = itemId[0];
 
-                entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
-                entity_updates.SetInt64("itemid", itemId);
-                entity_updates.SetInt("defindex", indexmodel);
-                entity_updates.SetInt("rarity", 1); 
-                EndMessage();
-                return 1;
-            }
+            entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
+            entity_updates.SetInt64("itemid", itemId);
+            entity_updates.SetInt("defindex", indexmodel);
+            entity_updates.SetInt("rarity", 1); 
+            EndMessage();
+            return 1;
         }
         else
         {
