@@ -4,8 +4,19 @@
 #include <k1_ers_core> 
 #include <k1_exitems> 
 bool g_bGiveKnife;
- 
 ArrayList g_hArrayWS;
+
+char g_WeaponClasses[][] = 
+{
+	/* 0*/ "weapon_awp", /* 1*/ "weapon_ak47", /* 2*/ "weapon_m4a1", /* 3*/ "weapon_m4a1_silencer", /* 4*/ "weapon_deagle", /* 5*/ "weapon_usp_silencer", /* 6*/ "weapon_hkp2000", /* 7*/ "weapon_glock", /* 8*/ "weapon_elite", 
+	/* 9*/ "weapon_p250", /*10*/ "weapon_cz75a", /*11*/ "weapon_fiveseven", /*12*/ "weapon_tec9", /*13*/ "weapon_revolver", /*14*/ "weapon_nova", /*15*/ "weapon_xm1014", /*16*/ "weapon_mag7", /*17*/ "weapon_sawedoff", 
+	/*18*/ "weapon_m249", /*19*/ "weapon_negev", /*20*/ "weapon_mp9", /*21*/ "weapon_mac10", /*22*/ "weapon_mp7", /*23*/ "weapon_ump45", /*24*/ "weapon_p90", /*25*/ "weapon_bizon", /*26*/ "weapon_famas", /*27*/ "weapon_galilar", 
+	/*28*/ "weapon_ssg08", /*29*/ "weapon_aug", /*30*/ "weapon_sg556", /*31*/ "weapon_scar20", /*32*/ "weapon_g3sg1", /*33*/ "weapon_knife_karambit", /*34*/ "weapon_knife_m9_bayonet", /*35*/ "weapon_bayonet", 
+	/*36*/ "weapon_knife_survival_bowie", /*37*/ "weapon_knife_butterfly", /*38*/ "weapon_knife_flip", /*39*/ "weapon_knife_push", /*40*/ "weapon_knife_tactical", /*41*/ "weapon_knife_falchion", /*42*/ "weapon_knife_gut",
+	/*43*/ "weapon_knife_ursus", /*44*/ "weapon_knife_gypsy_jackknife", /*45*/ "weapon_knife_stiletto", /*46*/ "weapon_knife_widowmaker", /*47*/ "weapon_mp5sd", /*48*/ "weapon_knife_css", /*49*/ "weapon_knife_cord", 
+	/*50*/ "weapon_knife_canis", /*51*/ "weapon_knife_outdoor", /*52*/ "weapon_knife_skeleton"
+};
+ 
 public Plugin myinfo = 
 {
     name = "[K1-ERS] End Round Skin Core (for EXITEMS)",
@@ -94,7 +105,7 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 		return 0;
     else
     {
-        if(g_bGiveKnife) 
+        if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
             EXITEMS_GiveClientItem(iClient, iWeaponId, _, 1, "EXITEMS_Knife");
 
         EXITEMS_GiveClientItem(iClient, iItemId, iWeaponId, 1, "EXITEMS_WS");
@@ -116,3 +127,12 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
     }
 	return 0;
 }
+
+bool IsKnifeClass(int index)
+{
+	if ((StrContains(g_WeaponClasses[i], "knife") > -1 && strcmp(g_WeaponClasses[i], "weapon_knifegg") != 0) || StrContains(g_WeaponClasses[i], "bayonet") > -1)
+		return true;
+
+	return false;
+}
+
