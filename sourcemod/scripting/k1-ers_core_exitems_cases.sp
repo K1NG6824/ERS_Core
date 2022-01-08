@@ -2,16 +2,16 @@
 #include <sdkhooks>
 #include <clientprefs>
 #include <k1_ers_core> 
-#include <k1_wsgk> 
+#include <k1_exitems> 
+#include <k1_cases> 
 bool g_bGiveKnife;
- 
 ArrayList g_hArrayWS;
 public Plugin myinfo = 
 {
-    name = "[K1-ERS] End Round Skin Core (for WSGK)",
+    name = "[K1-ERS] End Round Skin Core (for EXITEMS)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "1.9"
+    version = "2.0"
 }
 
 public void OnPluginStart()
@@ -49,7 +49,7 @@ public void LoadConfig()
             idx = g_hArrayWS.Length;
             g_hArrayWS.Push(StringToInt(sBuffer));
             g_hArrayWS.Set(idx, StringToInt(sTemp), 1);
-            //0 ид скина - 1 id оружия дефолтные
+            //0 ид скина - 1 id оружия 
         } while (hKeyValues.GotoNextKey(false));
     }
     delete hKeyValues;
@@ -94,10 +94,33 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 		return 0;
     else
     {
-		if(!WSGK_ClientHaveItem(iClient, iItemId, iWeaponId, true))
+        if(iWeaponId == 10000)
         {
-        	if(g_bGiveKnife && !WSGK_ClientHaveItem(iClient, iWeaponId, 8000, true)) 
-				WSGK_GiveClientItem(iClient, iWeaponId, 8000, true);
+            int indexmodel = K1_CasesIdCaseModelById(iItemId);
+            if(indexmodel == -1)
+                indexmodel = 4001;
+                
+            K1_CasesGiveCase(iClient, iItemId, 1);
+            Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
+            Protobuf entity_updates = pb.AddMessage("entity_updates");
+            int itemId[2];
+
+            itemId[0] = GetRandomInt(0, 1000000);
+            itemId[1] = itemId[0];
+
+            entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
+            entity_updates.SetInt64("itemid", itemId);
+            entity_updates.SetInt("defindex", indexmodel);
+            entity_updates.SetInt("rarity", 1); 
+            EndMessage();
+            return 1;
+        }
+        else
+        {
+            if(g_bGiveKnife) 
+                EXITEMS_GiveClientItem(iClient, iWeaponId, _, 1, "EXITEMS_Knife");
+
+            EXITEMS_GiveClientItem(iClient, iItemId, iWeaponId, 1, "EXITEMS_WS");
 
             WSGK_GiveClientItem(iClient, iItemId, iWeaponId, true);
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
@@ -116,5 +139,5 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
             return 1;
         }
     }
-	return 0;
+    return 0;
 }

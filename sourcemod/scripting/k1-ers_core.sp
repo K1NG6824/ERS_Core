@@ -9,7 +9,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "1.9"
+    version = "2.0"
 }
 
 public void OnPluginStart()
@@ -45,7 +45,7 @@ public void LoadConfig()
             idx = g_hArrayWS.Length;
             g_hArrayWS.Push(StringToInt(sBuffer));
             g_hArrayWS.Set(idx, StringToInt(sTemp), 1);
-            //0 ид скина - 1 id оружия дефолтные
+            //0 ид скина - 1 id оружия
         } while (hKeyValues.GotoNextKey(false));
     }
     delete hKeyValues;
