@@ -32,7 +32,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core (for EXITEMS)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "2.0"
+    version = "2.1"
 }
 
 public void OnPluginStart()

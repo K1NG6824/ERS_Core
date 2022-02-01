@@ -2,7 +2,7 @@
 #include <sdkhooks>
 #include <clientprefs>
 #include <k1_ers_core> 
-#include <k1_exitems> 
+#include <k1_wsgk> 
 #include <k1_cases> 
 bool g_bGiveKnife;
 
@@ -30,7 +30,7 @@ int g_iWeaponDefIndex[] =
 
 public Plugin myinfo = 
 {
-    name = "[K1-ERS] End Round Skin Core (for EXITEMS + Cases)",
+    name = "[K1-ERS] End Round Skin Core (for WSGK + Cases)",
     author = "K1NG",
     description = "http//projecttm.ru/",
     version = "2.1"
@@ -116,9 +116,9 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
         else
         {
             if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
-                EXITEMS_GiveClientItem(iClient, iWeaponId, _, 1, "EXITEMS_Knife");
+                WSGK_GiveClientItem(iClient, iWeaponId, 8000);
 
-            EXITEMS_GiveClientItem(iClient, iItemId, iWeaponId, 1, "EXITEMS_WS");
+            WSGK_GiveClientItem(iClient, iItemId, iWeaponId);
 
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
             Protobuf entity_updates = pb.AddMessage("entity_updates");

@@ -2,8 +2,7 @@
 #include <sdkhooks>
 #include <clientprefs>
 #include <k1_ers_core> 
-#include <k1_exitems> 
-#include <k1_cases> 
+#include <k1_wsgk> 
 bool g_bGiveKnife;
 
 char g_WeaponClasses[][] = 
@@ -27,10 +26,10 @@ int g_iWeaponDefIndex[] =
 	/*43*/ 519, /*44*/ 520, /*45*/ 522, /*46*/ 523, /*47*/ 23, /*48*/ 503, /*49*/ 517,
 	/*50*/ 518, /*51*/ 521, /*52*/ 525
 };
-
+ 
 public Plugin myinfo = 
 {
-    name = "[K1-ERS] End Round Skin Core (for EXITEMS + Cases)",
+    name = "[K1-ERS] End Round Skin Core (for WSGK)",
     author = "K1NG",
     description = "http//projecttm.ru/",
     version = "2.1"
@@ -92,49 +91,25 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 		return 0;
     else
     {
-        if(iWeaponId == 10000)
-        {
-            int indexmodel = K1_CasesIdCaseModelById(iItemId);
-            if(indexmodel == -1)
-                indexmodel = 4001;
-                
-            K1_CasesGiveCase(iClient, iItemId, 1);
-            Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
-            Protobuf entity_updates = pb.AddMessage("entity_updates");
-            int itemId[2];
+        if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
+            WSGK_GiveClientItem(iClient, iWeaponId, 8000);
 
-            itemId[0] = GetRandomInt(0, 1000000);
-            itemId[1] = itemId[0];
+        WSGK_GiveClientItem(iClient, iItemId, iWeaponId);
 
-            entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
-            entity_updates.SetInt64("itemid", itemId);
-            entity_updates.SetInt("defindex", indexmodel);
-            entity_updates.SetInt("rarity", 1); 
-            EndMessage();
-            return 1;
-        }
-        else
-        {
-            if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
-                EXITEMS_GiveClientItem(iClient, iWeaponId, _, 1, "EXITEMS_Knife");
+        Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
+        Protobuf entity_updates = pb.AddMessage("entity_updates");
+        int itemId[2];
 
-            EXITEMS_GiveClientItem(iClient, iItemId, iWeaponId, 1, "EXITEMS_WS");
+        itemId[0] = GetRandomInt(0, 1000000);
+        itemId[1] = itemId[0];
 
-            Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
-            Protobuf entity_updates = pb.AddMessage("entity_updates");
-            int itemId[2];
-
-            itemId[0] = GetRandomInt(0, 1000000);
-            itemId[1] = itemId[0];
-
-            entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
-            entity_updates.SetInt64("itemid", itemId);
-            entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
-            entity_updates.SetInt("paintindex", iItemId); 
-            entity_updates.SetInt("rarity", 1); 
-            EndMessage();
-            return 1;
-        }
+        entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
+        entity_updates.SetInt64("itemid", itemId);
+        entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+        entity_updates.SetInt("paintindex", iItemId); 
+        entity_updates.SetInt("rarity", 1); 
+        EndMessage();
+        return 1;
     }
 }
 

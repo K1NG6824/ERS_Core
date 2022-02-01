@@ -8,7 +8,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "2.0"
+    version = "2.1"
 }
 
 int g_iWeaponDefIndex[] = 
