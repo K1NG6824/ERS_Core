@@ -32,7 +32,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core (for WSGK)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "2.1"
+    version = "2.2"
 }
 
 public void OnPluginStart()
@@ -91,7 +91,7 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 		return 0;
     else
     {
-        if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
+        if(g_bGiveKnife && iWeaponId <= 52 && IsKnifeClass(iWeaponId)) 
             WSGK_GiveClientItem(iClient, iWeaponId, 8000);
 
         WSGK_GiveClientItem(iClient, iItemId, iWeaponId);
@@ -105,7 +105,10 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 
         entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
         entity_updates.SetInt64("itemid", itemId);
-        entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+        if(iWeaponId <= 52)
+            entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+        else
+            entity_updates.SetInt("defindex", iWeaponId);
         entity_updates.SetInt("paintindex", iItemId); 
         entity_updates.SetInt("rarity", 1); 
         EndMessage();

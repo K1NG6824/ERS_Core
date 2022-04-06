@@ -8,7 +8,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "2.1"
+    version = "2.2"
 }
 
 int g_iWeaponDefIndex[] = 
@@ -83,7 +83,10 @@ public int GiveDrop(int iClient, int iSkinId, int iWeaponId)
 
         entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
         entity_updates.SetInt64("itemid", itemId);
-        entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+        if(iWeaponId <= 52)
+            entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+        else
+            entity_updates.SetInt("defindex", iWeaponId);
         entity_updates.SetInt("paintindex", iSkinId); 
         entity_updates.SetInt("rarity", 1); 
         EndMessage();

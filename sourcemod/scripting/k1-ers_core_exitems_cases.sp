@@ -33,7 +33,7 @@ public Plugin myinfo =
     name = "[K1-ERS] End Round Skin Core (for EXITEMS + Cases)",
     author = "K1NG",
     description = "http//projecttm.ru/",
-    version = "2.1"
+    version = "2.2"
 }
 
 public void OnPluginStart()
@@ -115,7 +115,7 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
         }
         else
         {
-            if(g_bGiveKnife && IsKnifeClass(iWeaponId)) 
+            if(g_bGiveKnife && iWeaponId <= 52 && IsKnifeClass(iWeaponId)) 
                 EXITEMS_GiveClientItem(iClient, iWeaponId, _, 1, "EXITEMS_Knife");
 
             EXITEMS_GiveClientItem(iClient, iItemId, iWeaponId, 1, "EXITEMS_WS");
@@ -129,7 +129,10 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
 
             entity_updates.SetInt("accountid", GetSteamAccountID(iClient)); 
             entity_updates.SetInt64("itemid", itemId);
-            entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+            if(iWeaponId <= 52)
+                entity_updates.SetInt("defindex", g_iWeaponDefIndex[iWeaponId]);
+            else
+                entity_updates.SetInt("defindex", iWeaponId);
             entity_updates.SetInt("paintindex", iItemId); 
             entity_updates.SetInt("rarity", 1); 
             EndMessage();
