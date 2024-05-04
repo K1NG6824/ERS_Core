@@ -81,6 +81,15 @@ public SharedPlugin __pl_k1_EXITEMS =
 forward void EXITEMS_Started();
 
 /**
+ *	Вызывается когда данные игрока загрузились
+ *	-
+ * @noparams
+ *	-
+ * @noreturn
+*/
+forward void EXITEMS_OnAuthorized(int iClient);
+
+/**
  *	Проверка что ядро загружено и готово к регистрации функций.
  *	-
  * @noparams
@@ -89,6 +98,16 @@ forward void EXITEMS_Started();
  * 							false - Ядро не загружено.
 */
 native bool EXITEMS_IsStarted();
+
+/**
+ *	Проверка что данные игрока загружены.
+ *	-
+ * @noparams
+ *	-
+ * @return					true - Данные загружены.
+ * 							false - Данные не загружены.
+*/
+native bool EXITEMS_ClientLoaded(int iClient);
 
 /**
  *	Получить количество предметов игрока с определенной группой.
@@ -100,7 +119,15 @@ native bool EXITEMS_IsStarted();
  * @return					Возвращает количество предметов игрока
  *
 */
-native int EXITEMS_ClientNumItemsByGroup(int iClient, const char[] sCategory, int iGroup)
+native int EXITEMS_ClientNumItemsByGroup(int iClient, const char[] sCategory, int iGroup);
+
+/**
+ *	Проверить сколько максимум одинаковых предметов может быть.
+ *	-
+ * @return					Возвращает максимальное количество предметов
+ *
+*/
+native int EXITEMS_GetMaxItems(const char[] sCategory = "all");
 
 /**
  *	Проверить количество предметов игрока.
@@ -121,6 +148,7 @@ native int EXITEMS_ClientHaveItem(int iClient, int iItem = 0, int iGroup = 0, co
  * @param iClient			Индекс игрока.
  * @param iItem			    Индекс предмета
  * @param iGroup			Индекс группы
+ * @param iAmount			Количество
  * @param sCategory			Имя категории предметов
  *	-
  * @return					Возвращает новое количество предметов игрока
@@ -134,6 +162,7 @@ native int EXITEMS_GiveClientItem(int iClient, int iItem = 0, int iGroup = 0, in
  * @param iClient			Индекс игрока.
  * @param iItem			    Индекс предмета
  * @param iGroup			Индекс группы
+ * @param iAmount			Количество
  * @param sCategory			Имя категории предметов
  *	-
  * @return					Возвращает новое количество предметов игрока
@@ -148,6 +177,7 @@ native int EXITEMS_TakeClientItem(int iClient, int iItem = 0, int iGroup = 0, in
  * @param iClient			Индекс игрока.
  * @param iItem			    Индекс предмета
  * @param iGroup			Индекс группы
+ * @param iAmount			Количество
  * @param sCategory			Имя категории предметов
  *	-
  * @return					Возвращает новое количество предметов игрока
@@ -187,12 +217,14 @@ typedef RegisterCallback = function void (int iClient);
  * @param sCategory			Имя категории предметов.
  * @param MainMenu			Функция открытия главного меню плагина
  * @param AdminMenu			Функция открытия админ меню плагина.
+ * @param iLimited			Ограничения по количеству 0 отключить -1 глобальная переменная.
  *	-
  * @noreturn
 */
 native void EXITEMS_RegisterCategory(const char[] sCategory, 
 									RegisterCallback MainMenu = INVALID_FUNCTION, 
-									RegisterCallback AdminMenu = INVALID_FUNCTION);
+									RegisterCallback AdminMenu = INVALID_FUNCTION,
+									int iLimited = -1);
 
 /**
  *	Получить ArrayList id предметов определенной группы в группе ядра
@@ -412,6 +444,7 @@ native bool EXITEMS_ClientTakeGroup(int iClient, const char[] sGroup);
 	public void __pl_k1_exitems_SetNTVOptional()
 	{
 		MarkNativeAsOptional("EXITEMS_IsStarted");
+		MarkNativeAsOptional("EXITEMS_GetMaxItems");
 		MarkNativeAsOptional("EXITEMS_ClientHaveItem");
 		MarkNativeAsOptional("EXITEMS_GiveClientItem");
 		MarkNativeAsOptional("EXITEMS_TakeClientItem");

@@ -54,14 +54,13 @@ native bool K1_CasesGiveCase (int iClient, int iCase, int iNum);
  *	Выдать ключ.
  *	-
  * @param iClient			Индекс игрока.
- * @param iCase			    Индекс кейса
  * @param iNum			    Количество
  *	-
  * @return					true.
  * 							false.
 */
 
-native bool K1_CasesGiveKey (int iClient, int iCase, int iNum); 
+native bool K1_CasesGiveKey (int iClient, int iNum); 
 /**
  *	Забрать кейс.
  *	-
@@ -78,10 +77,30 @@ native bool K1_CasesTakeCase (int iClient, int iCase, int iNum);
  *	Забрать ключ.
  *	-
  * @param iClient			Индекс игрока.
- * @param iCase			    Индекс кейса
  * @param iNum			    Количество
  *	-
  * @return					true.
  * 							false.
 */
-native bool K1_CasesTakeKey (int iClient, int iCase, int iNum); 
+native bool K1_CasesTakeKey (int iClient, int iNum); 
+/**
+ *	Установить количество ключей.
+ *	-
+ * @param iClient			Индекс игрока.
+ * @param iNum			    Количество
+ *	-
+ * @return					true.
+ * 							false.
+*/
+native bool K1_CasesSetKey (int iClient, int iNum); 
+
+/**
+ *	Проверить открывает ли кейс игрок.
+ *	-
+ * @param iClient			Индекс игрока.
+ *	-
+ * @return					true - Кейс открывается.
+ * 							false - Игрок не валидный либо кейс не открывается.
+*/
+native bool K1_CheckOpenCase (int iClient); 
+
