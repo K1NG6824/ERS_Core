@@ -98,7 +98,7 @@ public int GiveDrop(int iClient, int iItemId, int iWeaponId)
             if(indexmodel == -1)
                 indexmodel = 4001;
                 
-            K1_CasesGiveCase(iClient, iItemId, 1);
+            EXITEMS_GiveClientItem(iClient, iItemId, _, 1, "EXITEMS_Cases");
             Protobuf pb = view_as<Protobuf>(StartMessageAll("SendPlayerItemDrops", USERMSG_RELIABLE));
             Protobuf entity_updates = pb.AddMessage("entity_updates");
             int itemId[2];
